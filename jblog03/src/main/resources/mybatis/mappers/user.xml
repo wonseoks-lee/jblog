@@ -8,9 +8,9 @@
 		]]>
 	</select>
 	
-	<select id="findByEmailAndPassword" parameterType="map" resultType="uservo">
+	<select id="findByIdAndPassword" parameterType="map" resultType="uservo">
 		<![CDATA[
-			select no, name, role from user where email = #{e} and password = #{p}
+			select id, name, password from user where id = #{id} and password = #{password}
 		]]>
 	</select>
 	

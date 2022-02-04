@@ -28,11 +28,11 @@ public class UserRepository {
 		return sqlSession.selectOne("user.findByNo", no);
 	}
 
-	public UserVo findByEmailAndPassword(String email, String password) throws UserRepositoryException {
+	public UserVo findByIdAndPassword(String id, String password) throws UserRepositoryException {
 		Map<String,String> map = new HashMap<>();
-		map.put("e", email);
-		map.put("p", password);
+		map.put("id", id);
+		map.put("password", password);
 		
-		return sqlSession.selectOne("user.findByEmailAndPassword", map);
+		return sqlSession.selectOne("user.findByIdAndPassword", map);
 	}
 }
