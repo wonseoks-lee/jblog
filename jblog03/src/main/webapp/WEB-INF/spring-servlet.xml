@@ -21,7 +21,12 @@
 	<mvc:default-servlet-handler/>
 
 	<!-- Interceptors -->
-	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/user/auth" />
+			<bean class="com.poscoict.jblog.security.LoginInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 
 	<!-- ViewResolver -->
 	<bean id="viewResolver"
