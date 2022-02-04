@@ -13,6 +13,9 @@ import com.poscoict.jblog.vo.UserVo;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 	
 	@Autowired
+	private HttpSession session;
+	
+	@Autowired
 	private UserService userService;
 
 	@Override
@@ -31,7 +34,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		}
 		
 		//session 
-		HttpSession session = request.getSession(true);
 		session.setAttribute("authUser", authUser);
 		response.sendRedirect(request.getContextPath());
 		return false;

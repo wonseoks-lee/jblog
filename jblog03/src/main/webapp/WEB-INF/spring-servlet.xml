@@ -26,6 +26,11 @@
 			<mvc:mapping path="/user/auth" />
 			<bean class="com.poscoict.jblog.security.LoginInterceptor" />
 		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/user/logout"/>
+			<bean class="com.poscoict.jblog.security.LogoutInterceptor" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 
 	<!-- ViewResolver -->

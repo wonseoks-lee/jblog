@@ -3,8 +3,12 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="com.poscoict.jblog.vo.UserVo" alias="uservo"/>
+		<typeAlias type="com.poscoict.jblog.vo.BlogVo" alias="blogvo"/>
+		<typeAlias type="com.poscoict.jblog.vo.CategoryVo" alias="categoryvo"/>
 	</typeAliases>
 	<mappers>
 		<mapper resource="mybatis/mappers/user.xml"/>
+		<mapper resource="mybatis/mappers/blog.xml"/>
+		<mapper resource="mybatis/mappers/category.xml"/>
 	</mappers>
 </configuration>
