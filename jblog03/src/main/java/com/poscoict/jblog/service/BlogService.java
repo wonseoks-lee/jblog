@@ -20,6 +20,11 @@ public class BlogService {
 	public BlogVo viewMain(String userId) {
 		return blogRepository.findByUserId(userId);
 	}
+
+	public Boolean updateBlog(BlogVo blogVo) {
+		return blogRepository.update(blogVo);
+	}
+	
 	
 	
 }

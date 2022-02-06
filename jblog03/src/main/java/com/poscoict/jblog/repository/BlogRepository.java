@@ -19,6 +19,10 @@ public class BlogRepository {
 	public BlogVo findByUserId(String userId) {
 		return sqlSession.selectOne("blog.findByUserId", userId);
 	}
+
+	public Boolean update(BlogVo blogVo) {
+		return 1 == sqlSession.update("blog.update", blogVo);
+	}
 	
 	
 }

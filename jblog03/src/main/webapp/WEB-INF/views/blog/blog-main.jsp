@@ -13,7 +13,7 @@
 	<div id="container">
 		<div id="header">
 			<h1>${blogVo.title}</h1>
-		<c:import url="/WEB-INF/views/includes/blogheader.jsp"></c:import>
+		<c:import url="/WEB-INF/views/includes/blogheader.jsp"/>
 		</div>
 		<div id="wrapper">
 			<div id="content">
@@ -38,7 +38,7 @@
 
 		<div id="extra">
 			<div class="blog-logo">
-				<img src="${pageContext.request.contextPath}/assets/images/spring-logo.jpg">
+				<img src="${pageContext.request.contextPath}/${blogVo.logo}">
 			</div>
 		</div>
 
