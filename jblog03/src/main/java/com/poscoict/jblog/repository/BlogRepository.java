@@ -15,5 +15,10 @@ public class BlogRepository {
 	public Boolean insert(BlogVo blogVo) {
 		return 1 == sqlSession.insert("blog.insert", blogVo);
 	}
+
+	public BlogVo findByUserId(String userId) {
+		return sqlSession.selectOne("blog.findByUserId", userId);
+	}
+	
 	
 }

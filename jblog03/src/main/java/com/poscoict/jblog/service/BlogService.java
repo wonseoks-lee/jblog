@@ -17,5 +17,9 @@ public class BlogService {
 		return blogRepository.insert(blogVo);
 	}
 	
+	public BlogVo viewMain(String userId) {
+		return blogRepository.findByUserId(userId);
+	}
+	
 	
 }

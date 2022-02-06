@@ -10,16 +10,16 @@
 <title>Insert title here</title>
 </head>
 <body>
-	
-	<ul class="menu">
+	<ul>
 		<c:choose>
 			<c:when test="${empty authUser }">
 				<li><a href="${pageContext.servletContext.contextPath}/user/login">로그인</a></li>
-				<li><a href="${pageContext.servletContext.contextPath}/user/join">회원가입</a></li>
+			</c:when>
+			<c:when test="${authUser.id eq blogVo.userId }">
+				<li><a href="${pageContext.servletContext.contextPath}/${authUser.id}/admin/basic">블로그 관리</a></li>
 			</c:when>
 			<c:otherwise>
-				<li><a href="${pageContext.servletContext.contextPath}/user/logout">로그아웃</a></li>
-				<li><a href="${pageContext.servletContext.contextPath}/${authUser.id}/admin">내블로그</a></li>
+				<li><a href="${pageContext.servletContext.contextPath}/user/bloglogout">로그아웃</a></li>
 			</c:otherwise>
 		</c:choose>
 	</ul>
