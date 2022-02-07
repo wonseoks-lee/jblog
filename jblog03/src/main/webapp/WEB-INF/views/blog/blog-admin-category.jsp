@@ -21,9 +21,9 @@
 		<div id="wrapper">
 			<div id="content" class="full-screen">
 				<ul class="admin-menu">
-					<li><a href="">기본설정</a></li>
+					<li><a href="${pageContext.request.contextPath}/${authUser.id }/admin/basic">기본설정</a></li>
 					<li class="selected">카테고리</li>
-					<li><a href="">글작성</a></li>
+					<li><a href="${pageContext.request.contextPath}/${authUser.id }/admin/write">글작성</a></li>
 				</ul>
 				<table class="admin-cat">
 					<tr>
@@ -40,7 +40,7 @@
 							<td>10</td>
 							<td>${categoryVo.description}</td>
 							<td><a
-								href="${pageContext.request.contextPath}/${authUser.id}/admin/delete/${categoryVo.no}"><img
+								href="${pageContext.request.contextPath}/${authUser.id}/admin/category/delete/${categoryVo.no}"><img
 									src="${pageContext.request.contextPath}/assets/images/delete.jpg"></a>
 							</td>
 						</tr>
@@ -48,7 +48,7 @@
 				</table>
 
 				<h4 class="n-c">새로운 카테고리 추가</h4>
-				<form method="post" action="${pageContext.request.contextPath}/${authUser.id}/admin/category/insert">
+				<form method="post" action="${pageContext.request.contextPath}/${authUser.id}/admin/category/write">
 					<table id="admin-cat-add">
 						<tr>
 							<td class="t">카테고리명</td>
@@ -68,7 +68,7 @@
 		</div>
 		<div id="footer">
 			<p>
-				<strong>${blogVo.title}</strong> is powered by JBlog (c)2016
+				<strong>${blogVo.title}</strong> is powered by JBlog (c)2022
 			</p>
 		</div>
 	</div>
