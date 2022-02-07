@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="category">
+	<select id="findAll" parameterType="string" resultType="categoryvo">
+		<![CDATA[
+			select no, name, description, blog_id as blogId from category where blog_id = #{id};
+		]]>
+	</select>
+
+
 	<insert id="insertDefault" parameterType="categoryvo">
 		<![CDATA[
 			insert into category values(null, "미분류", "기본 카테고리", #{blogId});
+		]]>
+	</insert>
+
+	<delete id="delete" parameterType="categoryvo">
+		<![CDATA[
+		delete from category where no=#{no}
+		]]>
+	</delete>
+	
+	<insert id="insert" parameterType="categoryvo">
+		<![CDATA[
+			insert into category values(null, #{name}, #{description}, #{blogId});
 		]]>
 	</insert>
 </mapper>
