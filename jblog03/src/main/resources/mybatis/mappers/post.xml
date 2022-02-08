@@ -6,4 +6,28 @@
 			insert into post values(null, #{title}, #{contents}, date_format(now(), '%Y/%m/%d %H:%i:%s'), #{categoryNo});
 		]]>
 	</insert>
+	
+	<select id="findByCategoryNo" parameterType="long" resultType="postvo">
+		<![CDATA[
+			select no, title, contents, date_format(reg_date, '%Y/%m/%d %H:%i:%s') as regDate, category_no as categoryNo from post where category_no = #{categoryNo};
+		]]>
+	</select>
+	
+	<select id="findById" parameterType="string" resultType="postvo">
+		<![CDATA[
+			select p.no, p.title,  p.contents,p.reg_date as regDate, p.category_no as categoryNo from post p, category c where c.no = p.category_no and c.blog_id=#{id} order by reg_date desc
+		]]>
+	</select>
+	
+	<select id="countByCategoryNo" parameterType="long" resultType="long">
+	<![CDATA[
+	select count(no) from post where category_no = #{categoryNo};
+	]]>
+	</select>
+	
+	<select id="findByPostNo" parameterType="long" resultType="postvo">
+		<![CDATA[
+			select title, contents from post where no =#{postNo};
+		]]>
+	</select>
 </mapper>

@@ -11,6 +11,7 @@
 </head>
 <body>
 	<ul>
+		
 		<c:choose>
 			<c:when test="${empty authUser }">
 				<li><a
@@ -25,6 +26,7 @@
 			<li><a
 				href="${pageContext.servletContext.contextPath}/${authUser.id}/admin/basic">블로그관리</a></li>
 		</c:if>
+		<li><a href="${pageContext.servletContext.contextPath}/${authUser.id}">메인화면</a></li>
 	</ul>
 </body>
 </html>

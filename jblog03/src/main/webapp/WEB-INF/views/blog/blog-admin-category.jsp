@@ -37,11 +37,14 @@
 						<tr>
 							<td>${count-status.index}</td>
 							<td>${categoryVo.name}</td>
-							<td>10</td>
+							<td>${categoryVo.postCnt }</td>
 							<td>${categoryVo.description}</td>
-							<td><a
-								href="${pageContext.request.contextPath}/${authUser.id}/admin/category/delete/${categoryVo.no}"><img
-									src="${pageContext.request.contextPath}/assets/images/delete.jpg"></a>
+							<td>
+								<c:if test="${categoryVo.postCnt eq 0}">
+									<a
+										href="${pageContext.request.contextPath}/${authUser.id}/admin/category/delete/${categoryVo.no}"><img
+											src="${pageContext.request.contextPath}/assets/images/delete.jpg"></a>
+								</c:if>
 							</td>
 						</tr>
 					</c:forEach>

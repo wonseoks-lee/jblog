@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,7 +50,12 @@ public class BlogController {
 			@PathVariable("pathNo1") Optional<Long> pathNo1,
 			@PathVariable("pathNo2") Optional<Long> pathNo2,
 			Model model) {
-
+		List<CategoryVo> cList = categoryService.getCategoryList(id);
+		List<PostVo> defaultPost = postService.getDefaultPost(id);
+		BlogVo blogVo = blogService.viewMain(id);
+		if(blogVo == null) {
+			return "redirect:/";
+		}
 		Long categoryNo = 0L;
 		Long postNo = 0L;
 		
@@ -59,35 +63,35 @@ public class BlogController {
 		if(pathNo2.isPresent()) {
 			categoryNo = pathNo1.get();
 			postNo = pathNo2.get();
+			PostVo postVo = postService.getPost(postNo);
+			List<PostVo> pList = postService.getPostList(categoryNo);
+			model.addAttribute("postVo", postVo);
+			model.addAttribute("pList", pList);
 		} else if(pathNo1.isPresent()) {
 			categoryNo = pathNo1.get();
+			List<PostVo> pList = postService.getPostList(categoryNo);
+			model.addAttribute("pList", pList);
 		}
-		System.out.println("categoryNo:"+categoryNo);
-		System.out.println("postNo:"+postNo);
 		
-		BlogVo vo = blogService.viewMain(id);
-		model.addAttribute("blogVo", vo);
-		return "blog/blog-main";
-	}
-
-	@RequestMapping("/admin")
-	public String adminMain(@PathVariable("id") String id, Model model) {
-		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		BlogVo blogVo = blogService.viewMain(id);
+		
+		
 		model.addAttribute("blogVo", blogVo);
-		// 로그인한 상태 or 안한 상태에서 다른 블로그 아이디 url로 접근시 redirect
-		if (authUser == null || !authUser.getId().equals(id)) {
-			return "redirect:/{id}";
-		}
+		model.addAttribute("cList", cList);
+		model.addAttribute("defaultPost", defaultPost);
+		model.addAttribute("id", id);
 		return "blog/blog-main";
 	}
 
-	@RequestMapping("/admin/basic")
+	@RequestMapping({"/admin","/admin/basic"})
 	public String adminBasic(@PathVariable("id") String id, Model model) {
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
 		BlogVo blogVo = blogService.viewMain(id);
 		model.addAttribute("blogVo", blogVo);
-
+		
+		if(blogVo == null) {
+			return "redirect:/";
+		}
+		
 		// 로그인한 상태 or 안한 상태에서 다른 블로그 아이디 url로 접근시 redirect
 		if (authUser == null || !authUser.getId().equals(id)) {
 			return "redirect:/{id}";
@@ -116,6 +120,11 @@ public class BlogController {
 		List<CategoryVo> cList = categoryService.getCategoryList(id);
 		model.addAttribute("cList", cList);
 		model.addAttribute("blogVo", blogVo);
+		
+		if(blogVo == null) {
+			return "redirect:/";
+		}
+		
 		// 로그인한 상태 or 안한 상태에서 다른 블로그 아이디 url로 접근시 redirect
 		if (authUser == null || !authUser.getId().equals(id)) {
 			return "redirect:/{id}";
@@ -127,9 +136,13 @@ public class BlogController {
 	public String adminCategory(@PathVariable("id") String id, Model model) {
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
 		BlogVo blogVo = blogService.viewMain(id);
-		List<CategoryVo> cList = categoryService.getCategoryList(id);
+		List<CategoryVo> cList = postService.getPostCount(categoryService.getCategoryList(id));
 		model.addAttribute("cList", cList); 
 		model.addAttribute("blogVo", blogVo);
+		
+		if(blogVo == null) {
+			return "redirect:/";
+		}
 		
 		// 로그인한 상태 or 안한 상태에서 다른 블로그 아이디 url로 접근시 redirect
 		if (authUser == null || !authUser.getId().equals(id)) {
@@ -163,10 +176,6 @@ public class BlogController {
 		}
 		return "redirect:/{id}";
 	}
-	
-	
-	
-	
 	
 	@RequestMapping("admin/category/delete/{no}")
 	public String delete(
