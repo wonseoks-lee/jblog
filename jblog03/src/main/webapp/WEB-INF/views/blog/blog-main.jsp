@@ -43,8 +43,9 @@
 						<c:forEach items="${defaultPost}" var="defaultPostVo" varStatus="status">
 							<ul class="blog-list">
 								<li><a
-									href="${pageContext.request.contextPath}/${id}/${defaultPostVo.categoryNo}/${defaultPostVo.no}">${defaultPostVo.title }</a>
+									href="${pageContext.request.contextPath}/${blogId}/${defaultPostVo.categoryNo}/${defaultPostVo.no}">${defaultPostVo.title }</a>
 									<span>${defaultPostVo.regDate}</span></li>
+									
 							</ul>
 						</c:forEach>
 					</c:when>
@@ -52,7 +53,7 @@
 						<c:forEach items="${pList}" var="postVo" varStatus="status">
 							<ul class="blog-list">
 								<li><a
-									href="${pageContext.request.contextPath}/${id}/${postVo.categoryNo}/${postVo.no}">${postVo.title }</a>
+									href="${pageContext.request.contextPath}/${blogId}/${postVo.categoryNo}/${postVo.no}">${postVo.title }</a>
 									<span>${postVo.regDate}</span></li>
 							</ul>
 						</c:forEach>
@@ -73,7 +74,7 @@
 			<c:forEach items="${cList}" var="categoryVo" varStatus="status">
 				<ul>
 					<li><a
-						href="${pageContext.request.contextPath}/${id}/${categoryVo.no}">${categoryVo.name}</a></li>
+						href="${pageContext.request.contextPath}/${blogId}/${categoryVo.no}">${categoryVo.name}</a></li>
 				</ul>
 			</c:forEach>
 		</div>

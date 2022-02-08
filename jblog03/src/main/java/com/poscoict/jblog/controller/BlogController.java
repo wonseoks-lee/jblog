@@ -27,7 +27,7 @@ import com.poscoict.jblog.vo.UserVo;
 // .* -> 모든 문자열을 빼겠다.
 // (?!aseests) -> assets 을 제외하고 모두 들어온다
 @Controller
-@RequestMapping("/{id:(?!assets)(?!images).*}")
+@RequestMapping("/{blogId:(?!assets)(?!images).*}")
 public class BlogController {
 
 	@Autowired
@@ -46,13 +46,13 @@ public class BlogController {
 
 	@RequestMapping({"", "/{pathNo1}", "/{pathNo1}/{pathNo2}"})
 	public String blogMain(
-			@PathVariable("id") String id,
+			@PathVariable("blogId") String blogId,
 			@PathVariable("pathNo1") Optional<Long> pathNo1,
 			@PathVariable("pathNo2") Optional<Long> pathNo2,
 			Model model) {
-		List<CategoryVo> cList = categoryService.getCategoryList(id);
-		List<PostVo> defaultPost = postService.getDefaultPost(id);
-		BlogVo blogVo = blogService.viewMain(id);
+		List<CategoryVo> cList = categoryService.getCategoryList(blogId);
+		List<PostVo> defaultPost = postService.getDefaultPost(blogId);
+		BlogVo blogVo = blogService.viewMain(blogId);
 		if(blogVo == null) {
 			return "redirect:/";
 		}
@@ -74,18 +74,17 @@ public class BlogController {
 		}
 		
 		
-		
 		model.addAttribute("blogVo", blogVo);
 		model.addAttribute("cList", cList);
 		model.addAttribute("defaultPost", defaultPost);
-		model.addAttribute("id", id);
+		model.addAttribute("blogId", blogId);
 		return "blog/blog-main";
 	}
 
 	@RequestMapping({"/admin","/admin/basic"})
-	public String adminBasic(@PathVariable("id") String id, Model model) {
+	public String adminBasic(@PathVariable("blogId") String blogId, Model model) {
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		BlogVo blogVo = blogService.viewMain(id);
+		BlogVo blogVo = blogService.viewMain(blogId);
 		model.addAttribute("blogVo", blogVo);
 		
 		if(blogVo == null) {
@@ -93,31 +92,31 @@ public class BlogController {
 		}
 		
 		// 로그인한 상태 or 안한 상태에서 다른 블로그 아이디 url로 접근시 redirect
-		if (authUser == null || !authUser.getId().equals(id)) {
-			return "redirect:/{id}";
+		if (authUser == null || !authUser.getId().equals(blogId)) {
+			return "redirect:/{blogId}";
 		}
 		return "blog/blog-admin-basic";
 	}
 
 	@RequestMapping(value = "admin/update", method = RequestMethod.POST)
 	public String update(
-			@PathVariable("id") String id,
+			@PathVariable("blogId") String blogId,
 			BlogVo blogVo,
 			@RequestParam(value="logo-file")MultipartFile multipartFile,
 			Model model) {
 		String url = fileUploadService.restore(multipartFile);
 		blogVo.setLogo(url);
-		blogVo.setUserId(id);
+		blogVo.setUserId(blogId);
 		blogService.updateBlog(blogVo);
 		model.addAttribute("blogVo", blogVo);
-		return "redirect:/{id}/admin/basic";
+		return "redirect:/{blogId}/admin/basic";
 	}
 	
 	@RequestMapping("admin/write")
-	public String adminWrite(@PathVariable("id") String id, Model model) {
+	public String adminWrite(@PathVariable("blogId") String blogId, Model model) {
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		BlogVo blogVo = blogService.viewMain(id);
-		List<CategoryVo> cList = categoryService.getCategoryList(id);
+		BlogVo blogVo = blogService.viewMain(blogId);
+		List<CategoryVo> cList = categoryService.getCategoryList(blogId);
 		model.addAttribute("cList", cList);
 		model.addAttribute("blogVo", blogVo);
 		
@@ -126,17 +125,17 @@ public class BlogController {
 		}
 		
 		// 로그인한 상태 or 안한 상태에서 다른 블로그 아이디 url로 접근시 redirect
-		if (authUser == null || !authUser.getId().equals(id)) {
+		if (authUser == null || !authUser.getId().equals(blogId)) {
 			return "redirect:/{id}";
 		}
 		return "blog/blog-admin-write";
 	}
 	
 	@RequestMapping("/admin/category")
-	public String adminCategory(@PathVariable("id") String id, Model model) {
+	public String adminCategory(@PathVariable("blogId") String blogId, Model model) {
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
-		BlogVo blogVo = blogService.viewMain(id);
-		List<CategoryVo> cList = postService.getPostCount(categoryService.getCategoryList(id));
+		BlogVo blogVo = blogService.viewMain(blogId);
+		List<CategoryVo> cList = postService.getPostCount(categoryService.getCategoryList(blogId));
 		model.addAttribute("cList", cList); 
 		model.addAttribute("blogVo", blogVo);
 		
@@ -145,44 +144,44 @@ public class BlogController {
 		}
 		
 		// 로그인한 상태 or 안한 상태에서 다른 블로그 아이디 url로 접근시 redirect
-		if (authUser == null || !authUser.getId().equals(id)) {
-			return "redirect:/{id}";
+		if (authUser == null || !authUser.getId().equals(blogId)) {
+			return "redirect:/{blogId}";
 		}
 		return "blog/blog-admin-category";
 	}
 	
 	@RequestMapping(value="/admin/category/write", method=RequestMethod.POST)
-	public String categoryWrite(@PathVariable("id") String id, CategoryVo categoryVo) {
+	public String categoryWrite(@PathVariable("blogId") String blogId, CategoryVo categoryVo) {
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
 		categoryVo.setBlogId(authUser.getId());
 		categoryService.addCategory(categoryVo);
 		
 		
 		// 로그인한 상태 or 안한 상태에서 다른 블로그 아이디 url로 접근시 redirect
-		if (authUser == null || !authUser.getId().equals(id)) {
-			return "redirect:/{id}";
+		if (authUser == null || !authUser.getId().equals(blogId)) {
+			return "redirect:/{blogId}";
 		}
-		return "redirect:/{id}/admin/category";
+		return "redirect:/{blogId}/admin/category";
 	}
 	
 	@RequestMapping(value="/admin/post/write", method=RequestMethod.POST)
-	public String postWrite(@PathVariable("id") String id, PostVo postVo) {
+	public String postWrite(@PathVariable("blogId") String blogId, PostVo postVo) {
 		UserVo authUser = (UserVo) session.getAttribute("authUser");
 		postService.write(postVo);
 		
 		// 로그인한 상태 or 안한 상태에서 다른 블로그 아이디 url로 접근시 redirect
-		if (authUser == null || !authUser.getId().equals(id)) {
-			return "redirect:/{id}";
+		if (authUser == null || !authUser.getId().equals(blogId)) {
+			return "redirect:/{blogId}";
 		}
-		return "redirect:/{id}";
+		return "redirect:/{blogId}";
 	}
 	
 	@RequestMapping("admin/category/delete/{no}")
 	public String delete(
-			@PathVariable("id") String id,
+			@PathVariable("blogId") String blogId,
 			@PathVariable("no") Long no) {
 		categoryService.deleteCategory(no);
-		return "redirect:/{id}/admin/category";
+		return "redirect:/{blogId}/admin/category";
 	}
 	
 }
