@@ -35,7 +35,7 @@ public class BlogController {
 	@Autowired 
 	private PostService postService;
 	
-	@RequestMapping({"", "/{categoryNo}", "/{categoryNo}/{postNo}"})
+	@RequestMapping(value = {"", "/{categoryNo}", "/{categoryNo}/{postNo}"}, method = RequestMethod.GET)
 	public String blogMain(
 			@PathVariable("blogId") String blogId,
 			@PathVariable(required=false) Long categoryNo,
@@ -46,7 +46,7 @@ public class BlogController {
 	}
 	
 	@Auth
-	@RequestMapping({"/admin","/admin/basic"})
+	@RequestMapping(value = {"/admin","/admin/basic"}, method = RequestMethod.GET)
 	public String adminBasic(@PathVariable("blogId") String blogId, Model model) {
 		blogService.viewMain(blogId, model);
 
@@ -65,7 +65,7 @@ public class BlogController {
 	}
 	
 	@Auth
-	@RequestMapping("admin/write")
+	@RequestMapping(value="admin/write", method=RequestMethod.GET)
 	public String adminWrite(@PathVariable("blogId") String blogId, Model model) {
 		blogService.viewMain(blogId, model);
 		categoryService.getCategoryList(blogId, model);
@@ -74,7 +74,14 @@ public class BlogController {
 	}
 	
 	@Auth
-	@RequestMapping("/admin/category")
+	@RequestMapping(value="/admin/post/write", method=RequestMethod.POST)
+	public String postWrite(@PathVariable("blogId") String blogId, PostVo postVo) {
+		postService.write(postVo);
+		return "redirect:/{blogId}";
+	}
+	
+	@Auth
+	@RequestMapping(value="/admin/category", method=RequestMethod.GET)
 	public String adminCategory(@PathVariable("blogId") String blogId, Model model) {
 		blogService.viewMain(blogId, model);
 		postService.getPostCount(blogId, model);
@@ -90,15 +97,9 @@ public class BlogController {
 		return "redirect:/{blogId}/admin/category";
 	}
 	
-	@Auth
-	@RequestMapping(value="/admin/post/write", method=RequestMethod.POST)
-	public String postWrite(@PathVariable("blogId") String blogId, PostVo postVo) {
-		postService.write(postVo);
-		return "redirect:/{blogId}";
-	}
 	
 	@Auth
-	@RequestMapping("admin/category/delete/{no}")
+	@RequestMapping(value="admin/category/delete/{no}", method=RequestMethod.GET)
 	public String delete(
 			@PathVariable("blogId") String blogId,
 			@PathVariable("no") Long no) {
