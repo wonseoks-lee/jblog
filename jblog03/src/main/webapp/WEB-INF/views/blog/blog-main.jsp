@@ -20,46 +20,17 @@
 		<div id="wrapper">
 			<div id="content">
 				<div class="blog-content">
-					<c:choose>
-						<c:when test="${pList eq null }">
-							<c:forEach items="${defaultPost}" begin="0" end="0"
-								var="defaultPostVo" varStatus="status">
-								<h4>${defaultPostVo.title}</h4>
-								<p>${fn:replace(defaultPostVo.contents, newline, "<br/>")}
-								<p>
-							</c:forEach>
-
-						</c:when>
-						<c:otherwise>
-							<h4>${postVo.title }</h4>
-							<p>${fn:replace(postVo.contents, newline, "<br/>")}
-							<p>
-						</c:otherwise>
-					</c:choose>
-
+					<h4>${postVo.title }</h4>
+					<p>${fn:replace(postVo.contents, newline, "<br/>")}
+					<p>
 				</div>
-				<c:choose>
-					<c:when test="${pList eq null }">
-						<c:forEach items="${defaultPost}" var="defaultPostVo" varStatus="status">
-							<ul class="blog-list">
-								<li><a
-									href="${pageContext.request.contextPath}/${blogId}/${defaultPostVo.categoryNo}/${defaultPostVo.no}">${defaultPostVo.title }</a>
-									<span>${defaultPostVo.regDate}</span></li>
-									
-							</ul>
-						</c:forEach>
-					</c:when>
-					<c:otherwise>
-						<c:forEach items="${pList}" var="postVo" varStatus="status">
-							<ul class="blog-list">
-								<li><a
-									href="${pageContext.request.contextPath}/${blogId}/${postVo.categoryNo}/${postVo.no}">${postVo.title }</a>
-									<span>${postVo.regDate}</span></li>
-							</ul>
-						</c:forEach>
-					</c:otherwise>
-				</c:choose>
-
+				<c:forEach items="${pList}" var="postVo" varStatus="status">
+					<ul class="blog-list">
+						<li><a
+							href="${pageContext.request.contextPath}/${blogId}/${postVo.categoryNo}/${postVo.no}">${postVo.title }</a>
+							<span>${postVo.regDate}</span></li>
+					</ul>
+				</c:forEach>
 			</div>
 		</div>
 

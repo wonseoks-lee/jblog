@@ -52,6 +52,7 @@ public class AuthUserHandlerMethodArgumentResolver extends HandlerMethodArgument
 		}
 		
 		return session.getAttribute("authUser");
+		
 	}
 
 }

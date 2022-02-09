@@ -9,7 +9,7 @@
 	
 	<select id="findByCategoryNo" parameterType="long" resultType="postvo">
 		<![CDATA[
-			select no, title, contents, date_format(reg_date, '%Y/%m/%d') as regDate, category_no as categoryNo from post where category_no = #{categoryNo};
+			select no, title, contents, date_format(reg_date, '%Y/%m/%d') as regDate, category_no as categoryNo from post where category_no = #{categoryNo} order by reg_date desc;
 		]]>
 	</select>
 	

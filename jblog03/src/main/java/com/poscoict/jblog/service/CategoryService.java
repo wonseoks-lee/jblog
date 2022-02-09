@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.poscoict.jblog.repository.CategoryRepository;
 import com.poscoict.jblog.vo.CategoryVo;
@@ -14,7 +15,13 @@ public class CategoryService {
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
-	public List<CategoryVo> getCategoryList(String id) {
+	public Boolean getCategoryList(String id, Model model) {
+		List<CategoryVo> cList = categoryRepository.findAll(id);
+		model.addAttribute("cList", cList);
+		return true;
+	}
+	
+	public List<CategoryVo> getClist(String id) {
 		return categoryRepository.findAll(id);
 	}
 
