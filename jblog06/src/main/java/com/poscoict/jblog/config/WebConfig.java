@@ -13,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.poscoict.jblog.interceptor.BlogInterceptor;
 import com.poscoict.jblog.security.AuthInterceptor;
 import com.poscoict.jblog.security.AuthUserHandlerMethodArgumentResolver;
 import com.poscoict.jblog.security.LoginInterceptor;
@@ -49,6 +50,10 @@ public class WebConfig implements WebMvcConfigurer{
 		public HandlerInterceptor authInterceptor() {
 			return new AuthInterceptor();
 		}
+		@Bean
+		public HandlerInterceptor blogInterceptor() {
+			return new BlogInterceptor();
+		}
 
 		@Override
 		public void addInterceptors(InterceptorRegistry registry) {
@@ -65,6 +70,11 @@ public class WebConfig implements WebMvcConfigurer{
 				.addPathPatterns("/**")
 				.excludePathPatterns("/user/auth")
 				.excludePathPatterns("/user/logout")
+				.excludePathPatterns("/assets/**");
+			
+			registry
+				.addInterceptor(blogInterceptor())
+				.addPathPatterns("/**")
 				.excludePathPatterns("/assets/**");
 		}
 		

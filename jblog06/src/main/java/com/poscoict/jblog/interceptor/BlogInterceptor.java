@@ -12,6 +12,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.poscoict.jblog.service.BlogService;
 import com.poscoict.jblog.vo.BlogVo;
 
+@SuppressWarnings("deprecation")
 public class BlogInterceptor extends HandlerInterceptorAdapter{
 	@Autowired
 	private BlogService blogService;
@@ -29,7 +30,8 @@ public class BlogInterceptor extends HandlerInterceptorAdapter{
 		
 		// 블로그 아이디접근이 아닌 ~/jblog 까지만 접근했을 시에 ...
 		if(blogId == null) {
-			return true;
+			response.sendRedirect(request.getContextPath());
+			return false;
 		}
 		
 		// blogId로 url 접근시, blogVo 객체를 불러오고 해당하는 아이디의 블로그가 존재하지 않을 시, 메인으로 리다이렉트 
