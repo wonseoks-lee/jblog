@@ -36,9 +36,6 @@ public class BlogService {
 	}
 	
 	public BlogVo viewMain(String blogId) {
-		
-//		BlogVo blogVo = blogRepository.findByUserId(blogId);
-		//model.addAttribute("blogVo",blogVo);
 		return blogRepository.findByUserId(blogId);
 	}
 

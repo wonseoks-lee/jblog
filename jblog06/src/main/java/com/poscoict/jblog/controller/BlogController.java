@@ -35,7 +35,7 @@ public class BlogController {
 	@Autowired 
 	private PostService postService;
 	
-	@RequestMapping(value = {"", "/{categoryNo}", "/{categoryNo}/{postNo}"}, method = RequestMethod.GET)
+	@RequestMapping({"", "/{categoryNo}", "/{categoryNo}/{postNo}"})
 	public String blogMain(
 			@PathVariable("blogId") String blogId,
 			@PathVariable(required=false) Long categoryNo,
@@ -46,10 +46,8 @@ public class BlogController {
 	}
 	
 	@Auth
-	@RequestMapping(value = {"/admin","/admin/basic"}, method = RequestMethod.GET)
+	@RequestMapping({"/admin","/admin/basic"})
 	public String adminBasic(@PathVariable("blogId") String blogId, Model model) {
-		blogService.viewMain(blogId, model);
-
 		return "blog/blog-admin-basic";
 	}
 	
@@ -65,12 +63,24 @@ public class BlogController {
 	}
 	
 	@Auth
-	@RequestMapping(value="admin/write", method=RequestMethod.GET)
+	@RequestMapping("admin/write")
 	public String adminWrite(@PathVariable("blogId") String blogId, Model model) {
-		blogService.viewMain(blogId, model);
 		categoryService.getCategoryList(blogId, model);
-
 		return "blog/blog-admin-write";
+	}
+	
+	@Auth
+	@RequestMapping("/admin/category")
+	public String adminCategory(@PathVariable("blogId") String blogId, Model model) {
+		postService.getPostCount(blogId, model);
+		return "blog/blog-admin-category";
+	}
+	
+	@Auth
+	@RequestMapping(value="/admin/category/write", method=RequestMethod.POST)
+	public String categoryWrite(@PathVariable("blogId") String blogId, CategoryVo categoryVo) {
+		categoryService.addCategory(categoryVo);
+		return "redirect:/{blogId}/admin/category";
 	}
 	
 	@Auth
@@ -81,25 +91,7 @@ public class BlogController {
 	}
 	
 	@Auth
-	@RequestMapping(value="/admin/category", method=RequestMethod.GET)
-	public String adminCategory(@PathVariable("blogId") String blogId, Model model) {
-		blogService.viewMain(blogId, model);
-		postService.getPostCount(blogId, model);
-		
-		return "blog/blog-admin-category";
-	}
-	
-	@Auth
-	@RequestMapping(value="/admin/category/write", method=RequestMethod.POST)
-	public String categoryWrite(@PathVariable("blogId") String blogId, CategoryVo categoryVo) {
-		categoryService.addCategory(categoryVo);
-		
-		return "redirect:/{blogId}/admin/category";
-	}
-	
-	
-	@Auth
-	@RequestMapping(value="admin/category/delete/{no}", method=RequestMethod.GET)
+	@RequestMapping("admin/category/delete/{no}")
 	public String delete(
 			@PathVariable("blogId") String blogId,
 			@PathVariable("no") Long no) {
