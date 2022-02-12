@@ -35,10 +35,11 @@ public class BlogService {
 		return blogRepository.insert(blogVo);
 	}
 	
-	public Boolean viewMain(String blogId, Model model) {
-		BlogVo blogVo = blogRepository.findByUserId(blogId);
-		model.addAttribute("blogVo",blogVo);
-		return true;
+	public BlogVo viewMain(String blogId) {
+		
+//		BlogVo blogVo = blogRepository.findByUserId(blogId);
+		//model.addAttribute("blogVo",blogVo);
+		return blogRepository.findByUserId(blogId);
 	}
 
 	public Boolean updateBlog(String blogId, BlogVo blogVo, MultipartFile multipartFile, Model model) {

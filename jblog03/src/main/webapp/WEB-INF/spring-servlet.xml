@@ -39,6 +39,12 @@
 			<mvc:exclude-mapping path="/assets/**" />
 			<bean class="com.poscoict.jblog.security.AuthInterceptor" />
 		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/assets/**" />
+			<bean class="com.poscoict.jblog.interceptor.BlogInterceptor"/>
+		</mvc:interceptor>
 	</mvc:interceptors>
 
 	<!-- ViewResolver -->

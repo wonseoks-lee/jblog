@@ -48,8 +48,6 @@ public class BlogController {
 	@Auth
 	@RequestMapping({"/admin","/admin/basic"})
 	public String adminBasic(@PathVariable("blogId") String blogId, Model model) {
-		blogService.viewMain(blogId, model);
-
 		return "blog/blog-admin-basic";
 	}
 	
@@ -67,18 +65,14 @@ public class BlogController {
 	@Auth
 	@RequestMapping("admin/write")
 	public String adminWrite(@PathVariable("blogId") String blogId, Model model) {
-		blogService.viewMain(blogId, model);
 		categoryService.getCategoryList(blogId, model);
-
 		return "blog/blog-admin-write";
 	}
 	
 	@Auth
 	@RequestMapping("/admin/category")
 	public String adminCategory(@PathVariable("blogId") String blogId, Model model) {
-		blogService.viewMain(blogId, model);
 		postService.getPostCount(blogId, model);
-		
 		return "blog/blog-admin-category";
 	}
 	
@@ -86,7 +80,6 @@ public class BlogController {
 	@RequestMapping(value="/admin/category/write", method=RequestMethod.POST)
 	public String categoryWrite(@PathVariable("blogId") String blogId, CategoryVo categoryVo) {
 		categoryService.addCategory(categoryVo);
-		
 		return "redirect:/{blogId}/admin/category";
 	}
 	
