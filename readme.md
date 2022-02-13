@@ -1,7 +1,5 @@
 # 블로그 메인
 
----
-
 ```java
 @RequestMapping(value = {"", "/{categoryNo}", "/{categoryNo}/{postNo}"}, method = RequestMethod.GET)
 	public String blogMain(
@@ -18,9 +16,9 @@ http://ip:8080/ [사용자ID] / [categoryNo] / [postNo] 로 주소를 요청 받
 
 PathVariable에 require=false값을 주어 http://ip:8080/ [사용자ID] 로 요청이 들어와도 오류 X
 
-# 로그인
-
 ---
+
+# 로그인
 
 ```java
 @Override
@@ -49,9 +47,9 @@ id, password를 입력하고 로그인버튼을 누르면 user/auth로 요청이
 
 user/auth으로 요청 시, 맵핑해둔 로그인 인터셉터가 실행되고 getUser 메서드를 통해  입력받은 id password에 맞는 유저가 있다면 session에 authUser란 이름으로 객체를 넣는다
 
-# 로그아웃
-
 ---
+
+# 로그아웃
 
 ```java
 @Override
@@ -70,9 +68,9 @@ user/auth으로 요청 시, 맵핑해둔 로그인 인터셉터가 실행되고 
 
 session에 있는 authUser를 삭제하고, 세션 객체를 삭제한다.
 
-# 회원가입
-
 ---
+
+# 회원가입
 
 ```java
 @RequestMapping(value="/join", method=RequestMethod.POST)
@@ -84,51 +82,50 @@ session에 있는 authUser를 삭제하고, 세션 객체를 삭제한다.
 
 userVo에 id password name을 set 하여 join 메서드를 통해 DB에 등록한다
 
-# 블로그 인터셉터
-
 ---
 
+# 블로그 인터셉터
+
 ```java
-		Map<String, Object> user_id = (Map<String, Object>) request.getAttribute( HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
-		String blogId = null;
+		Map<String, String> user_id = (Map<String, String>) request.getAttribute( HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 		// NullpointException 방지
-		if(user_id.get("blogId")!=null) {
-			blogId = (String) user_id.get("blogId");
+		if(user_id == null) {
+			return true;
 		}
 		
 ```
 
-.get을 통해 바로 blogId에 대입할 경우 NullpointerException이 발생한다
-
-이를 방지하기위해 user_id.get(”blogId”) 가 널이 아닐때만 blogId에 선언한다
+uri에서 pathvariable이 null 일 경우를 먼저 처리 해준다. ( 여기서 바로 user_id.get을 했다가 널포인터가 발생했었는데 map을 먼저 널인지를 체크해줌으로서 .get을 해도 널포인트가 발생하지 않았다 )
 
 ```java
-if(blogId == null) {
-			response.sendRedirect(request.getContextPath());
-			return false;
-		}
+if(user_id.get("blogId") == null) {
+			return true;
+}
 ```
 
 blogId가 널이라는 것은 메인url 로 요청이 들어왔다는 뜻이므로 메인으로 리다이렉트한다
 
 ```java
+String blogId = user_id.get("blogId");
 BlogVo blogVo = (BlogVo)blogService.viewMain(blogId);
-		if(blogVo == null) {
-			response.sendRedirect(request.getContextPath());
-			return false;
-		}
+if(blogVo == null) {
+		response.sendRedirect(request.getContextPath());
+		return false;
+}
 ```
 
 blogId로 url 접근시, blogVo 객체를 불러오고 해당하는 아이디의 블로그가 존재하지 않을 시, 메인으로 리다이렉트
 
 ```java
 request.setAttribute("blogVo", blogVo);
-		return true;
+return true;
 ```
 
 정상적인 요청시, blogVo객체를 던짐
 
-### 계정 생성
+---
+
+# 계정 생성
 show databases;
 
 use jblog;
@@ -138,3 +135,5 @@ create user 'jblog'@'%' identified by 'jblog';
 grant all privileges on jblog.* to 'jblog'@'%';
 
 flush privileges;
+
+---
