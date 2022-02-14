@@ -82,6 +82,23 @@ session에 있는 authUser를 삭제하고, 세션 객체를 삭제한다.
 
 userVo에 id password name을 set 하여 join 메서드를 통해 DB에 등록한다
 
+```java
+public void join(UserVo userVo) {
+		BlogVo blogVo = new BlogVo();
+		CategoryVo categoryVo = new CategoryVo();
+		String id = userVo.getId();
+		blogVo.setUserId(id);
+		categoryVo.setBlogId(id);
+		userRepository.insert(userVo);
+		blogRepository.insert(blogVo);
+		categoryRepository.insertDefault(categoryVo);
+	}
+```
+
+join을 하고 글작성을 할때, 최초에 디폴트 카테고리가 있어야지만 글을 작성할 수 있다
+
+그러므로, 최초 가입시, 블로그생성과 디폴트카테고리생성, 유저아이디 생성 세가지를 insert한다.
+
 ---
 
 # 블로그 인터셉터
