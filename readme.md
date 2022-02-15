@@ -1,3 +1,7 @@
+# 초기화면
+![jblog main gif-min](https://user-images.githubusercontent.com/66767038/154117720-2ffd3e56-d1c3-4a10-bd78-7ed8085ea92b.gif)
+---
+
 # 블로그 메인
 
 ```java
@@ -14,9 +18,7 @@
 
 http://ip:8080/ [사용자ID] / [categoryNo] / [postNo] 로 주소를 요청 받는다
 
-PathVariable에 require=false값을 주어 http://ip:8080/ [사용자ID] 로 요청이 들어와도 오류 X
-
----
+PathVariable에 require=false값을 주어 http://ip:8080/ [사용자ID] 로 요청이 들어와도 오류 X      
 
 # 로그인
 
@@ -45,9 +47,7 @@ PathVariable에 require=false값을 주어 http://ip:8080/ [사용자ID] 로 요
 
 id, password를 입력하고 로그인버튼을 누르면 user/auth로 요청이 간다.
 
-user/auth으로 요청 시, 맵핑해둔 로그인 인터셉터가 실행되고 getUser 메서드를 통해  입력받은 id password에 맞는 유저가 있다면 session에 authUser란 이름으로 객체를 넣는다
-
----
+user/auth으로 요청 시, 맵핑해둔 로그인 인터셉터가 실행되고 getUser 메서드를 통해  입력받은 id password에 맞는 유저가 있다면 session에 authUser란 이름으로 객체를 넣는다  
 
 # 로그아웃
 
@@ -66,9 +66,7 @@ user/auth으로 요청 시, 맵핑해둔 로그인 인터셉터가 실행되고 
 
 로그아웃버튼 클릭 시, user/logout으로 요청하고 맵핑해둔 로그아웃인터셉터가 실행된다
 
-session에 있는 authUser를 삭제하고, 세션 객체를 삭제한다.
-
----
+session에 있는 authUser를 삭제하고, 세션 객체를 삭제한다.  
 
 # 회원가입
 
@@ -97,9 +95,7 @@ public void join(UserVo userVo) {
 
 join을 하고 글작성을 할때, 최초에 디폴트 카테고리가 있어야지만 글을 작성할 수 있다
 
-그러므로, 최초 가입시, 블로그생성과 디폴트카테고리생성, 유저아이디 생성 세가지를 insert한다.
-
----
+그러므로, 최초 가입시, 블로그생성과 디폴트카테고리생성, 유저아이디 생성 세가지를 insert한다.  
 
 # 블로그 인터셉터
 
@@ -138,19 +134,79 @@ request.setAttribute("blogVo", blogVo);
 return true;
 ```
 
-정상적인 요청시, blogVo객체를 던짐
+정상적인 요청시, blogVo객체를 던짐  
 
----
+# Validation
 
-# 계정 생성
-show databases;
+```java
+@RequestMapping(value="/join", method=RequestMethod.GET)
+	public String join(@ModelAttribute UserVo userVo) {
+		return "user/join";
+	}
+```
 
-use jblog;
+ModelAttribute를 사용하여 UserVo 객체를 생성하여 join.jsp 로 넘긴다
 
-create user 'jblog'@'%' identified by 'jblog';
+(이를 안할 시, 객체가 없으므로 form:form태그를 사용할 때  modelAttribute에 적어둔 객체에 접근하지못하여 오류를 발생시킨다)
 
-grant all privileges on jblog.* to 'jblog'@'%';
+```java
+@RequestMapping(value="/join", method=RequestMethod.POST)
+	public String join(@ModelAttribute @Valid UserVo userVo, BindingResult result, Model model) {
+		if(result.hasErrors()) {
+			model.addAllAttributes(result.getModel());
+			return "user/join";
+		}
+		userService.join(userVo);
+		return "redirect:/user/joinsuccess";
+	}
+```
 
-flush privileges;
+Valid의 결과가 BindindResult객체에 저장된다
 
----
+만약, 이 결과가 에러를 갖고있을 시에 맵핑된 에러종류들을 한번에 다시 get요청으로  join.jsp로 던진다
+
+```jsx
+<form:form modelAttribute="userVo" class="join-form" id="join-form" method="post" action="${pageContext.servletContext.contextPath}/user/join">
+			<label class="block-label" for="name">이름</label>
+			<form:input path="name"/>
+			<p style="text-align:left; padding-left:0; color:#f00">
+				<form:errors path="name"/>
+			</p>
+```
+
+controller부터 /join get요청을 통해 받아온 userVo객체를 세팅하고 set을 사용할 수 있다
+
+```java
+@NotEmpty
+	@Length(min=2, max=8)
+	private String id;
+	
+	@NotEmpty
+	private String name;
+	// @Pattern(regexp="^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
+	
+	@NotEmpty
+	@Length(min=4, max=16)
+	private String password;
+```
+
+UserVo에 원하는 Validation annotation 추가
+
+```
+NotEmpty.userVo.id=\uC544\uC774\uB514\uB294 \uBE44\uC5B4 \uC788\uC744\uC218 \uC5C6\uC2B5\uB2C8\uB2E4.
+NotEmpty.userVo.name=\uC774\uB984\uC740 \uBE44\uC5B4 \uC788\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.
+Length.userVo.name=\uC774\uB984\uC740 2~8\uC790 \uC774\uC5B4\uC57C \uD569\uB2C8\uB2E4.
+NotEmpty.userVo.password=\uBE44\uBC00\uBC88\uD638\uB294 \uBE44\uC5B4 \uC788\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.
+Length.userVo.password=\uBE44\uBC00\uBC88\uD638\uB294 4~16\uC790 \uC774\uC5B4\uC57C \uD569\uB2C8\uB2E4.
+```
+
+UserVo에 설정해둔 Validation annotation에 따른 메시지명 추가
+
+```
+# message resource(Internationalization)
+spring.messages.always-message-format=true
+spring.messages.basename=messages/messages_ko
+spring.messages.encoding=UTF-8
+```
+
+application.properties 에 message resource추가 
