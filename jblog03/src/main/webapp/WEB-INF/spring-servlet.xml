@@ -60,7 +60,14 @@
 	<mvc:resources mapping="/images/**" location="file:/Users/wonseok/upload-images/" />
 
 	<!-- MessageSource -->
-	
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>messages/messages_ko</value>
+			</list>
+		</property>
+	</bean>
 	<!-- 멀티파트 리졸버 -->
 	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
 		<!-- 최대업로드 가능한 바이트크기 -->

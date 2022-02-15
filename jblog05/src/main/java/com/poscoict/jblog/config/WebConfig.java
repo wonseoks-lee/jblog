@@ -11,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.poscoict.config.web.AssetsMappingConfig;
 import com.poscoict.config.web.FileuploadConfig;
+import com.poscoict.config.web.MessageConfig;
 import com.poscoict.config.web.MvcConfig;
 import com.poscoict.config.web.SecurityConfig;
 import com.poscoict.jblog.interceptor.BlogInterceptor;
@@ -18,7 +19,7 @@ import com.poscoict.jblog.interceptor.BlogInterceptor;
 @Configuration
 @EnableAspectJAutoProxy
 @ComponentScan({"com.poscoict.jblog.controller","com.poscoict.jblog.exception"})
-@Import({MvcConfig.class, SecurityConfig.class, FileuploadConfig.class, AssetsMappingConfig.class})
+@Import({MvcConfig.class, SecurityConfig.class, FileuploadConfig.class, AssetsMappingConfig.class, MessageConfig.class})
 public class WebConfig extends WebMvcConfigurerAdapter{
 	@Bean
 	public HandlerInterceptor blogInterceptor() {
